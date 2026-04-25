@@ -660,17 +660,27 @@ footer {
 
   <div class="events-grid">
 
-    <div class="event-card">
-      <div class="event-date">Sat 25 May 2026</div>
-      <div class="event-name">ballers </div>
-      <div class="event-venue">Crystle,Rongo · Doors open 7 PM</div>
+    <div class="event-card" style="position:relative;overflow:hidden;">
+      <img src="glow-poster.jpg" alt="Glow In The Dark" style="
+        width:100%; height:200px; object-fit:cover;
+        border-bottom:1px solid var(--border);
+        margin-bottom:1.2rem;
+        display:block;
+      ">
+      <div class="event-date">📅 Sat 25 April 2026 · Lights off 8PM</div>
+      <div class="event-name">🌟 Glow In The Dark Night Party</div>
+      <div class="event-venue">BlueBarrel Grill & Lounge · Doors open 8 PM</div>
       <div class="event-tags">
-        <span class="event-tag"> Live DJ</span>
-        <span class="event-tag"> Colour Party</span>
-        <span class="event-tag"> Open Bar</span>
+        <span class="event-tag">🎨 Neon Face Painting</span>
+        <span class="event-tag">🎵 Jam Session</span>
+        <span class="event-tag">📸 Photography</span>
+        <span class="event-tag">🎮 E-Football & FIFA</span>
+        <span class="event-tag">🃏 Poker & Ludo</span>
+        <span class="event-tag">🎂 Cake Cutting</span>
       </div>
       <div class="event-price">Ksh 100 / person</div>
-      <a href="#tickets" class="event-btn">Get Tickets</a>
+      <div style="font-size:0.6rem;color:var(--muted);margin-bottom:1rem;">👗 Dress Code: Neon or White · Team Kisii Uni will be present</div>
+      <a href="#tickets" class="event-btn">🎟️ Get Tickets</a>
     </div>
 
     <div class="event-card">
@@ -767,8 +777,8 @@ footer {
         <label>Select Event</label>
         <select id="t-event">
           <option value="">Choose event...</option>
+          <option>🌟 Glow In The Dark Night — 25 April 2026 (BlueBarrel)</option>
           <option>ballers — 25 May 2026</option>
-          <option>none</option>
           <option>none</option>
         </select>
       </div>
@@ -806,13 +816,13 @@ footer {
 
   <div class="photos-grid">
     <div class="photo-card">
-      <div class="photo-inner photo-bg-1">
-        
-        <div class="photo-update-badge"> Latest</div>
+      <div class="photo-inner photo-bg-1" style="background:none;padding:0;">
+        <img src="glow-poster.jpg" alt="Glow In The Dark" style="width:100%;height:100%;object-fit:cover;">
+        <div class="photo-update-badge">🔥 Latest</div>
         <div class="photo-overlay">
           <div>
-            <div class="photo-label">ballers</div>
-            <div class="photo-date">25 April. Crystle</div>
+            <div class="photo-label">Glow In The Dark Night</div>
+            <div class="photo-date">25 April 2026 · BlueBarrel Grill & Lounge</div>
           </div>
         </div>
       </div>
@@ -934,37 +944,89 @@ footer {
     setTimeout(() => t.className = 'toast', 5000);
   }
 
-  // PAY BUTTON
-document.getElementById('payBtn').addEventListener('click', function () {
-  const name  = document.getElementById('t-name').value.trim();
-  const phone = document.getElementById('t-phone').value.trim();
-  const event = document.getElementById('t-event').value;
-  const qty   = document.getElementById('t-qty').value;
-  
-  if (!name || !phone || !event) {
-    showToast('⚠️', 'Fill name, phone, and event'); return;
+  // PAY BUTTON — Real M-Pesa STK Push via Netlify Function
+document.getElementById('payBtn').addEventListener('click', async function () {
+  const name      = document.getElementById('t-name').value.trim();
+  const phone     = document.getElementById('t-phone').value.trim();
+  const email     = document.getElementById('t-email').value.trim();
+  const eventName = document.getElementById('t-event').value;
+  const qty       = parseInt(document.getElementById('t-qty').value) || 1;
+  const btn       = this;
+
+  if (!name || !phone || !eventName) {
+    showToast('⚠️', 'Fill in your name, phone, and select an event.'); return;
   }
-  
   if (!/^07\d{8}$/.test(phone)) {
     showToast('❌', 'Use format 07XXXXXXXX'); return;
   }
 
-  this.disabled = true;
-  this.textContent = 'Sending STK Push...';
-  
-  // FAKE STK SIMULATION
-  setTimeout(() => {
-    showToast('📱', `DEMO: STK sent to ${phone}. Check your phone.`);
-    setTimeout(() => {
-      showToast('✅', `DEMO: Payment confirmed! QR ticket sent to WhatsApp.`);
-      this.disabled = false;
-      this.textContent = '🎟️ Confirm & Pay via M-Pesa';
-      
-      // Show fake success modal
-      alert(`DEMO SUCCESS ✅\n\nName: ${name}\nEvent: ${event}\nAmount: Ksh ${(selectedPrice * qty)}\n\nReal payments activate after 12.5k deposit to 0707249973.\nClient Till: ${clientTill || 'TBD'}`);
-    }, 4000);
-  }, 2000);
+  const amount = selectedPrice * qty;
+  const accountRef = `SP-${name.replace(/\s+/g,'-').toUpperCase()}-${Date.now()}`;
+
+  btn.disabled = true;
+  btn.textContent = '📱 Sending STK Push...';
+
+  try {
+    const res = await fetch('/.netlify/functions/stkpush', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone: `254${phone.slice(1)}`,
+        amount,
+        accountRef,
+        name,
+        email,
+        event: eventName,
+        qty,
+        ticketType: selectedName
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.ResponseCode === '0') {
+      showToast('📱', 'STK Push sent! Check your phone and enter your M-Pesa PIN.');
+      // Poll for payment confirmation
+      pollPayment(data.CheckoutRequestID, name, eventName, amount, btn);
+    } else {
+      showToast('❌', data.errorMessage || 'STK Push failed. Try again.');
+      btn.disabled = false;
+      btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
+    }
+  } catch (err) {
+    showToast('❌', 'Network error. Please try again.');
+    btn.disabled = false;
+    btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
+  }
 });
+
+// POLL PAYMENT STATUS
+function pollPayment(checkoutId, name, eventName, amount, btn) {
+  let attempts = 0;
+  const maxAttempts = 12; // 60 seconds
+  const interval = setInterval(async () => {
+    attempts++;
+    try {
+      const res = await fetch(`/.netlify/functions/checkpayment?id=${checkoutId}`);
+      const data = await res.json();
+      if (data.paid) {
+        clearInterval(interval);
+        showToast('✅', `Payment confirmed! 🎉 Ticket booked for ${name}. Check WhatsApp.`);
+        btn.disabled = false;
+        btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
+        ['t-name','t-phone','t-email'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('t-event').value = '';
+        document.getElementById('t-qty').value = '1';
+        updateTotal();
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        showToast('⚠️', 'Payment pending. Contact us on WhatsApp if deducted.');
+        btn.disabled = false;
+        btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
+      }
+    } catch { /* keep polling */ }
+  }, 5000);
+}
 
   // CURSOR
   const cursor = document.getElementById('cursor');
