@@ -730,55 +730,29 @@ footer {
           </div>
           <div class="ticket-plan-price">Ksh 100</div>
         </div>
-<<<<<<< HEAD
-        <div class="ticket-plan" data-price="00" data-name="VIP Table" onclick="selectPlan(this)">
-          <div class="ticket-plan-radio"></div>
-          <div class="ticket-plan-info">
-            <div class="ticket-plan-name">VIP Table </div>
-            <div class="ticket-plan-desc">N/A</div>
-          </div>
-          <div class="ticket-plan-price">Ksh</div>
-        </div>
-        <div class="ticket-plan" data-price="0" data-name="N/A" onclick="selectPlan(this)">
-          <div class="ticket-plan-radio"></div>
-          <div class="ticket-plan-info">
-            <div class="ticket-plan-name">N/A</div>
-            <div class="ticket-plan-desc">N/A</div>
-          </div>
-          <div class="ticket-plan-price">Ksh</div>
-        </div>
-        <div class="ticket-plan" data-price="0" data-name="N/A" onclick="selectPlan(this)">
-          <div class="ticket-plan-radio"></div>
-          <div class="ticket-plan-info">
-            <div class="ticket-plan-name">N/A </div>
-            <div class="ticket-plan-desc">N/A</div>
-          </div>
-          <div class="ticket-plan-price" style="-webkit-text-fill-color:#25d366;">N/A</div>
-=======
         <div class="ticket-plan" data-price="200" data-name="VIP Table" onclick="selectPlan(this)">
           <div class="ticket-plan-radio"></div>
           <div class="ticket-plan-info">
             <div class="ticket-plan-name">VIP Table </div>
             <div class="ticket-plan-desc">Reserved table + bottle service</div>
           </div>
-          <div class="ticket-plan-price">Ksh 200</div>
+          <div class="ticket-plan-price">N/A</div>
         </div>
-        <div class="ticket-plan" data-price="00" data-name="Couple Package" onclick="selectPlan(this)">
+        <div class="ticket-plan" data-price="800" data-name="Couple Package" onclick="selectPlan(this)">
           <div class="ticket-plan-radio"></div>
           <div class="ticket-plan-info">
             <div class="ticket-plan-name">Couple Package </div>
             <div class="ticket-plan-desc">2 entries + welcome drinks</div>
           </div>
-          <div class="ticket-plan-price">Ksh 800</div>
+          <div class="ticket-plan-price">Ksh</div>
         </div>
         <div class="ticket-plan" data-price="0" data-name="Ladies Free Entry" onclick="selectPlan(this)">
           <div class="ticket-plan-radio"></div>
           <div class="ticket-plan-info">
-            <div class="ticket-plan-name">ladies free </div>
-            <div class="ticket-plan-desc">Free for ladies before 10 PM</div>
+            <div class="ticket-plan-name">Ladies Free Entry </div>
+            <div class="ticket-plan-desc">Free for ladies </div>
           </div>
-          <div class="ticket-plan-price" style="-webkit-text-fill-color:#25d366;">FREE</div>
->>>>>>> 9358505849275c2622e1adb4f8be025fa9ec8ddb
+          <div class="ticket-plan-price" style="-webkit-text-fill-color:#25d366;">N/A</div>
         </div>
       </div>
     </div>
@@ -804,12 +778,7 @@ footer {
         <select id="t-event">
           <option value="">Choose event...</option>
           <option>🌟 Glow In The Dark Night — 25 April 2026 (BlueBarrel)</option>
-<<<<<<< HEAD
-          <option>none</option>
-=======
-          <option>ballers — 25 May 2026</option>
->>>>>>> 9358505849275c2622e1adb4f8be025fa9ec8ddb
-          <option>none</option>
+          <option>Next Event — Coming Soon</option>
         </select>
       </div>
       <div class="tf-row">
@@ -823,12 +792,12 @@ footer {
         </div>
         <div class="ticket-summary-amount">Ksh <span id="plan-total">100</span></div>
       </div>
-      <button class="pay-btn" id="payBtn">🎟️ Confirm & Pay via M-Pesa</button>
+      <button class="pay-btn" id="payBtn">🎟️ Confirm & Book Ticket</button>
       <div class="payment-icons">
-        <span class="payment-icon">📱 M-Pesa</span>
-        <span class="payment-icon">💳 Card</span>
+        <span class="payment-icon">📧 Email Confirmation</span>
+        <span class="payment-icon">📱 WhatsApp Ticket</span>
         <span class="payment-icon">🔒 Secure</span>
-        <span class="payment-icon">✅ Instant Confirmation</span>
+        <span class="payment-icon">✅ Instant Booking</span>
       </div>
     </div>
   </div>
@@ -978,89 +947,64 @@ footer {
     setTimeout(() => t.className = 'toast', 5000);
   }
 
-  // PAY BUTTON — Real M-Pesa STK Push via Netlify Function
-document.getElementById('payBtn').addEventListener('click', async function () {
-  const name      = document.getElementById('t-name').value.trim();
-  const phone     = document.getElementById('t-phone').value.trim();
-  const email     = document.getElementById('t-email').value.trim();
-  const eventName = document.getElementById('t-event').value;
-  const qty       = parseInt(document.getElementById('t-qty').value) || 1;
-  const btn       = this;
+  // PAY BUTTON — Formspree Ticket Submission
+  const FORMSPREE = 'https://formspree.io/f/xyklvyro';
 
-  if (!name || !phone || !eventName) {
-    showToast('⚠️', 'Fill in your name, phone, and select an event.'); return;
-  }
-  if (!/^07\d{8}$/.test(phone)) {
-    showToast('❌', 'Use format 07XXXXXXXX'); return;
-  }
+  document.getElementById('payBtn').addEventListener('click', async function () {
+    const name      = document.getElementById('t-name').value.trim();
+    const phone     = document.getElementById('t-phone').value.trim();
+    const email     = document.getElementById('t-email').value.trim();
+    const eventName = document.getElementById('t-event').value;
+    const qty       = parseInt(document.getElementById('t-qty').value) || 1;
+    const btn       = this;
 
-  const amount = selectedPrice * qty;
-  const accountRef = `SP-${name.replace(/\s+/g,'-').toUpperCase()}-${Date.now()}`;
-
-  btn.disabled = true;
-  btn.textContent = '📱 Sending STK Push...';
-
-  try {
-    const res = await fetch('/.netlify/functions/stkpush', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        phone: `254${phone.slice(1)}`,
-        amount,
-        accountRef,
-        name,
-        email,
-        event: eventName,
-        qty,
-        ticketType: selectedName
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.ResponseCode === '0') {
-      showToast('📱', 'STK Push sent! Check your phone and enter your M-Pesa PIN.');
-      // Poll for payment confirmation
-      pollPayment(data.CheckoutRequestID, name, eventName, amount, btn);
-    } else {
-      showToast('❌', data.errorMessage || 'STK Push failed. Try again.');
-      btn.disabled = false;
-      btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
+    if (!name || !phone || !email || !eventName) {
+      showToast('⚠️', 'Please fill in name, phone, email and select an event.'); return;
     }
-  } catch (err) {
-    showToast('❌', 'Network error. Please try again.');
-    btn.disabled = false;
-    btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
-  }
-});
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('❌', 'Please enter a valid email address.'); return;
+    }
+    if (!/^07\d{8}$/.test(phone)) {
+      showToast('❌', 'Phone format: 07XXXXXXXX'); return;
+    }
 
-// POLL PAYMENT STATUS
-function pollPayment(checkoutId, name, eventName, amount, btn) {
-  let attempts = 0;
-  const maxAttempts = 12; // 60 seconds
-  const interval = setInterval(async () => {
-    attempts++;
+    const total = selectedPrice * qty;
+
+    btn.disabled = true;
+    btn.textContent = '📨 Booking...';
+
     try {
-      const res = await fetch(`/.netlify/functions/checkpayment?id=${checkoutId}`);
-      const data = await res.json();
-      if (data.paid) {
-        clearInterval(interval);
-        showToast('✅', `Payment confirmed! 🎉 Ticket booked for ${name}. Check WhatsApp.`);
-        btn.disabled = false;
-        btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
-        ['t-name','t-phone','t-email'].forEach(id => document.getElementById(id).value = '');
+      const res = await fetch(FORMSPREE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name,
+          phone,
+          email,
+          event: eventName,
+          ticket_type: selectedName,
+          quantity: qty,
+          total_amount: `Ksh ${total.toLocaleString()}`,
+          _subject: `🎟️ New Ticket Booking — ${selectedName} | ${name}`
+        })
+      });
+
+      if (res.ok) {
+        showToast('🎉', `Booking received! Check your email ${email} for ticket confirmation.`);
+        ['t-name', 't-phone', 't-email'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('t-event').value = '';
         document.getElementById('t-qty').value = '1';
         updateTotal();
-      } else if (attempts >= maxAttempts) {
-        clearInterval(interval);
-        showToast('⚠️', 'Payment pending. Contact us on WhatsApp if deducted.');
-        btn.disabled = false;
-        btn.textContent = '🎟️ Confirm & Pay via M-Pesa';
+      } else {
+        showToast('❌', 'Booking failed. Please try again or contact us on WhatsApp.');
       }
-    } catch { /* keep polling */ }
-  }, 5000);
-}
+    } catch {
+      showToast('❌', 'Network error. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🎟️ Confirm & Book Ticket';
+    }
+  });
 
   // CURSOR
   const cursor = document.getElementById('cursor');
