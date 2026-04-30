@@ -683,30 +683,27 @@ footer {
       <a href="#tickets" class="event-btn">🎟️ Get Tickets</a>
     </div>
 
-    <div class="event-card">
-      <div class="event-date">Date</div>
-      <div class="event-name">party name</div>
-      <div class="event-venue">location · Doors open </div>
+    <div class="event-card" style="position:relative;overflow:hidden;">
+      <img src="endsemester-poster.jpg" alt="End Semester Party" style="
+        width:100%; height:auto; object-fit:contain;
+        border-bottom:1px solid var(--border);
+        margin-bottom:1.2rem;
+        display:block;
+      ">
+      <div class="event-date">📅 Friday 1st May 2026</div>
+      <div class="event-name">📚 "Books Down" End Semester Party</div>
+      <div class="event-venue">Crystal Business Complex · Rongo</div>
       <div class="event-tags">
-        <span class="event-tag"> Ladies Night</span>
-        <span class="event-tag"> Afrobeats</span>
-        <span class="event-tag"> VIP Tables</span>
+        <span class="event-tag">🎤 Rap Battles</span>
+        <span class="event-tag">🎵 Live Performance</span>
+        <span class="event-tag">🎂 4th Years Appreciation</span>
+        <span class="event-tag">🎙️ Freestyles</span>
+        <span class="event-tag">🥃 Free Shots (First 20)</span>
+        <span class="event-tag">🎧 DJ Tomix & DJ Sikesho</span>
       </div>
-      <div class="event-price">Ksh  / person</div>
-      <a href="#tickets" class="event-btn">Get Tickets</a>
-    </div>
-
-    <div class="event-card">
-      <div class="event-date"> </div>
-      <div class="event-name">Party </div>
-      <div class="event-venue">location · Doors open </div>
-      <div class="event-tags">
-        <span class="event-tag">Caribbean</span>
-        <span class="event-tag">Live Band</span>
-        <span class="event-tag">Cocktails</span>
-      </div>
-      <div class="event-price">Ksh 00 / person</div>
-      <a href="#tickets" class="event-btn">Get Tickets</a>
+      <div class="event-price">Regular Ksh 150 · 4th Yrs Ksh 100 · Group of 5 Ksh 600</div>
+      <div style="font-size:0.6rem;color:var(--muted);margin-bottom:1rem;">🎤 MC Kasheda · MC Spoiler · Sato Polite × Crystal Business</div>
+      <a href="#tickets" class="event-btn">🎟️ Get Tickets</a>
     </div>
 
   </div>
@@ -722,21 +719,37 @@ footer {
         Skip the queue. Buy your entry ticket online and receive instant confirmation on WhatsApp. Show your ticket at the door — it's that easy.
       </p>
       <div class="ticket-plans" id="ticketPlans">
-        <div class="ticket-plan selected" data-price="100" data-name="General Entry" onclick="selectPlan(this)">
+        <div class="ticket-plan selected" data-price="150" data-name="Regular Entry" onclick="selectPlan(this)">
           <div class="ticket-plan-radio"></div>
           <div class="ticket-plan-info">
-            <div class="ticket-plan-name">General Entry </div>
-            <div class="ticket-plan-desc">Main floor access · All areas</div>
+            <div class="ticket-plan-name">Regular Entry 🎉</div>
+            <div class="ticket-plan-desc">General floor access · All areas</div>
+          </div>
+          <div class="ticket-plan-price">Ksh 150</div>
+        </div>
+        <div class="ticket-plan" data-price="100" data-name="4th Year Entry" onclick="selectPlan(this)">
+          <div class="ticket-plan-radio"></div>
+          <div class="ticket-plan-info">
+            <div class="ticket-plan-name">4th Year Entry 🎓</div>
+            <div class="ticket-plan-desc">Special rate for 4th year students</div>
           </div>
           <div class="ticket-plan-price">Ksh 100</div>
         </div>
-        <div class="ticket-plan" data-price="200" data-name="VIP Table" onclick="selectPlan(this)">
+        <div class="ticket-plan" data-price="600" data-name="Group of 5" onclick="selectPlan(this)">
           <div class="ticket-plan-radio"></div>
           <div class="ticket-plan-info">
-            <div class="ticket-plan-name">VIP Table </div>
-            <div class="ticket-plan-desc">Reserved table + bottle service</div>
+            <div class="ticket-plan-name">Group of 5 👥</div>
+            <div class="ticket-plan-desc">5 entries — best value deal</div>
           </div>
-          <div class="ticket-plan-price">N/A</div>
+          <div class="ticket-plan-price">Ksh 600</div>
+        </div>
+        <div class="ticket-plan" data-price="0" data-name="Free Shots (First 20)" onclick="selectPlan(this)">
+          <div class="ticket-plan-radio"></div>
+          <div class="ticket-plan-info">
+            <div class="ticket-plan-name">🥃 Free Shots Claim</div>
+            <div class="ticket-plan-desc">First 20 people at the door get free shots</div>
+          </div>
+          <div class="ticket-plan-price" style="-webkit-text-fill-color:#25d366;">FREE</div>
         </div>
         <div class="ticket-plan" data-price="800" data-name="Couple Package" onclick="selectPlan(this)">
           <div class="ticket-plan-radio"></div>
@@ -778,6 +791,7 @@ footer {
         <select id="t-event">
           <option value="">Choose event...</option>
           <option>🌟 Glow In The Dark Night — 25 April 2026 (BlueBarrel)</option>
+          <option>📚 Books Down End Semester Party — 1 May 2026 (Crystal Business)</option>
           <option>Next Event — Coming Soon</option>
         </select>
       </div>
@@ -816,8 +830,19 @@ footer {
   <div class="photos-grid">
     <div class="photo-card">
       <div class="photo-inner photo-bg-1" style="background:none;padding:0;">
-        <img src="glow-poster.jpg" alt="Glow In The Dark" style="width:100%;height:100%;object-fit:cover;">
+        <img src="endsemester-poster.jpg" alt="End Semester Party" style="width:100%;height:100%;object-fit:cover;">
         <div class="photo-update-badge">🔥 Latest</div>
+        <div class="photo-overlay">
+          <div>
+            <div class="photo-label">Books Down — End Semester Party</div>
+            <div class="photo-date">1st May 2026 · Crystal Business Complex</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-inner photo-bg-2" style="background:none;padding:0;">
+        <img src="glow-poster.jpg" alt="Glow In The Dark" style="width:100%;height:100%;object-fit:cover;">
         <div class="photo-overlay">
           <div>
             <div class="photo-label">Glow In The Dark Night</div>
@@ -827,49 +852,31 @@ footer {
       </div>
     </div>
     <div class="photo-card">
-      <div class="photo-inner photo-bg-2">
-        
-        <div class="photo-overlay">
-          <div>
-            <div class="photo-label">party</div>
-            <div class="photo-date">date and place</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="photo-card">
       <div class="photo-inner photo-bg-3">
-        
         <div class="photo-overlay">
           <div>
-            <div class="photo-label">party</div>
-            <div class="photo-date">date and place</div>
+            <div class="photo-label">Coming Soon</div>
+            <div class="photo-date">Next event photos here</div>
           </div>
         </div>
       </div>
     </div>
     <div class="photo-card">
       <div class="photo-inner photo-bg-4">
-        
         <div class="photo-overlay">
           <div>
-            <div class="photo-label">party</div>
-            <div class="photo-date">date and place</div>
-
-            <div class="photo-label">VIP Night Out</div>
-            <div class="photo-date">February 2026</div>
-
+            <div class="photo-label">Coming Soon</div>
+            <div class="photo-date">Next event photos here</div>
           </div>
         </div>
       </div>
     </div>
     <div class="photo-card">
       <div class="photo-inner photo-bg-5">
-        
         <div class="photo-overlay">
           <div>
-            <div class="photo-label">party</div>
-            <div class="photo-date">date and place</div>
+            <div class="photo-label">Coming Soon</div>
+            <div class="photo-date">Next event photos here</div>
           </div>
         </div>
       </div>
